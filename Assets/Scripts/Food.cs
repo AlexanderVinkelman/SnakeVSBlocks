@@ -9,7 +9,7 @@ public class Food : MonoBehaviour
     public TextMesh TM;
 
     private SnakeMovement snake;
-    private SnakeTail tail;
+    //private SnakeTail tail;
 
 
     // Start is called before the first frame update
@@ -17,21 +17,26 @@ public class Food : MonoBehaviour
     {
         FoodPoints = (int) Random.Range(1f, 6f);
 
+        
         TM = transform.GetChild(0).GetComponent<TextMesh>();
         TM.text = FoodPoints.ToString();
 
         snake = GameObject.Find("Player").GetComponent<SnakeMovement>();
-        tail = GameObject.Find("Player").GetComponent<SnakeTail>();
+        //tail = GameObject.Find("Player").GetComponent<SnakeTail>();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    /*private void OnCollisionEnter(Collision collision)
+    {
+        
+    }*/
+
+    private void OnTriggerEnter(Collider other)
     {
         for (int i = 0; i < FoodPoints; i++)
         {
-            snake.Length++;
-            tail.AddBodies();
+            snake.AddTail();
         }
-        
+
         Destroy(gameObject);
     }
 }

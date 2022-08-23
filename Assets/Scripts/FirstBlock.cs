@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Block : MonoBehaviour
+public class FirstBlock : MonoBehaviour
 {
     public int BlockPoints;
     public int GradientPoints;
@@ -16,11 +16,11 @@ public class Block : MonoBehaviour
     //private SnakeTail tail;
 
     [SerializeField] private float maxPoints;
-    
+
     // Start is called before the first frame update
     void Start()
     {
-        BlockPoints = (int)Random.Range(1f, maxPoints);
+        BlockPoints = (int)Random.Range(1f, 3f);
         GradientPoints = BlockPoints;
 
         TM = transform.GetChild(0).GetComponent<TextMesh>();
@@ -30,7 +30,7 @@ public class Block : MonoBehaviour
         //tail = GameObject.Find("Player").GetComponent<SnakeTail>();
 
         MR = GetComponent<MeshRenderer>();
-        MR.material.SetFloat("Vector1_98ad2ead854b468885666a98fcbfb38c", BlockPoints/(maxPoints - 1));
+        MR.material.SetFloat("Vector1_98ad2ead854b468885666a98fcbfb38c", BlockPoints / (maxPoints - 1));
     }
 
     private void OnCollisionEnter(Collision collision)

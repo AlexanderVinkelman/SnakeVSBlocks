@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class SnakeMovement : MonoBehaviour
@@ -8,9 +9,11 @@ public class SnakeMovement : MonoBehaviour
     public float ForwardSpeed = 5;
     public float Sensitivity = 10;
 
-    public int Length = 1;
+    public int Length = 4;
 
-    //public TextMeshPro PointsText;
+
+    public TextMesh TM;
+    public GameObject LengthText;
 
     private Camera mainCamera;
     private Rigidbody componentRB;
@@ -31,7 +34,10 @@ public class SnakeMovement : MonoBehaviour
             componentST.AddBodies();
         }
 
-        //PointsText.SetText(Length.ToString());
+        TM = transform.GetChild(1).GetComponent<TextMesh>();
+        TM.text = Length.ToString();
+
+        Debug.Log(LevelNumber);
     }
 
     // Update is called once per frame
@@ -51,28 +57,30 @@ public class SnakeMovement : MonoBehaviour
             sidewaysSpeed += delta.x * Sensitivity;
             touchLastPos = mainCamera.ScreenToViewportPoint(Input.mousePosition);
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.A))
+   public void AddTail ()
+    {
+        Length++;
+        componentST.AddBodies();
+        TM.text = Length.ToString();
+    }
+
+   public void RemoveTail ()
+    {
+        Length--;
+        if (Length >= 0)
         {
-            componentST.AddBodies();
-            Length++;
-            //PointsText.SetText(Length.ToString());
+            componentST.RemoveBodies();
         }
 
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Length < 0)
         {
-            Length--;
-            
-            if (Length >= 0)
-            {
-                componentST.RemoveBodies();
-            }
-            else
-            {
-                Debug.Log("Game over");
-            }
-
-            
+            TM.text = "0";
+        }
+        else
+        {
+            TM.text = Length.ToString();
         }
     }
 
@@ -80,8 +88,37 @@ public class SnakeMovement : MonoBehaviour
     {
         ForwardSpeed = 0;
         Debug.Log("Game over");
+        ReloadLevel();
     }
-    
+
+    public void ReachFinish()
+    {
+        ForwardSpeed = 0;
+        Debug.Log("You win");
+        LevelNumber++;
+        
+        if (LevelNumber > 3)
+        {
+            LevelNumber = 1;
+        }
+        
+
+        ReloadLevel();
+    }
+
+    public int LevelNumber
+    {
+        get => PlayerPrefs.GetInt(LevelNumberKey, 1);
+
+        private set
+        {
+            PlayerPrefs.SetInt(LevelNumberKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    private const string LevelNumberKey = "LevelNumber";
+
     private void FixedUpdate()
     {
         if (Mathf.Abs(sidewaysSpeed) > 4)
@@ -91,5 +128,10 @@ public class SnakeMovement : MonoBehaviour
 
         componentRB.velocity = new Vector3(sidewaysSpeed * 5, 0, ForwardSpeed);
         sidewaysSpeed = 0;
+    }
+
+    private void ReloadLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
