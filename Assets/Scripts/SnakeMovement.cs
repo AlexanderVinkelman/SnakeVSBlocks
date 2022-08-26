@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 
 public class SnakeMovement : MonoBehaviour
@@ -10,10 +11,20 @@ public class SnakeMovement : MonoBehaviour
     public float Sensitivity = 10;
 
     public int Length = 4;
+    public int Score;
 
+    public GameObject WinScreen;
+    public GameObject LoseScreen;
 
-    public TextMesh TM;
-    public GameObject LengthText;
+    public Button NewLvl;
+    public Button ResLvl;
+
+    //public TextMesh TM;
+    //public GameObject LengthText;
+
+    public Text SnakeLenghtText;
+    public Text ScoreText;
+    public Text WinText;
 
     private Camera mainCamera;
     private Rigidbody componentRB;
@@ -29,13 +40,20 @@ public class SnakeMovement : MonoBehaviour
         componentRB = GetComponent<Rigidbody>();
         componentST = GetComponent<SnakeTail>();
 
+        NewLvl = GetComponent<Button>();
+        ResLvl = GetComponent<Button>();
+
+        Score = 0;
+        ScoreText.text = ScorePoints.ToString();
+
         for (int i = 0; i < Length; i++)
         {
             componentST.AddBodies();
         }
 
-        TM = transform.GetChild(1).GetComponent<TextMesh>();
-        TM.text = Length.ToString();
+        //TM = transform.GetChild(1).GetComponent<TextMesh>();
+        //TM.text = Length.ToString();
+        SnakeLenghtText.text = "Длина: " + Length.ToString();
 
         Debug.Log(LevelNumber);
     }
@@ -63,12 +81,17 @@ public class SnakeMovement : MonoBehaviour
     {
         Length++;
         componentST.AddBodies();
-        TM.text = Length.ToString();
+        //TM.text = Length.ToString();
+        SnakeLenghtText.text = "Длина: " + Length.ToString();
     }
 
    public void RemoveTail ()
     {
         Length--;
+
+        ScorePoints++;
+        ScoreText.text = ScorePoints.ToString();
+
         if (Length >= 0)
         {
             componentST.RemoveBodies();
@@ -76,34 +99,46 @@ public class SnakeMovement : MonoBehaviour
 
         if (Length < 0)
         {
-            TM.text = "0";
+            //TM.text = "0";
+            SnakeLenghtText.text = "Длина: 0";
+            ScorePoints = 0;
         }
         else
         {
-            TM.text = Length.ToString();
+            //TM.text = Length.ToString();
+            SnakeLenghtText.text = "Длина: " + Length.ToString();
         }
     }
 
     public void Die ()
     {
         ForwardSpeed = 0;
-        Debug.Log("Game over");
-        ReloadLevel();
+        
+        LoseScreen.SetActive(true);
+
+        //ReloadLevel();
     }
 
     public void ReachFinish()
     {
         ForwardSpeed = 0;
-        Debug.Log("You win");
-        LevelNumber++;
         
+        WinScreen.SetActive(true);
+        WinText.text = "Уровень " + LevelNumber.ToString() + " пройден!";
+
+        LevelNumber++;
+
         if (LevelNumber > 3)
         {
             LevelNumber = 1;
         }
-        
 
-        ReloadLevel();
+        /*if (Input.GetButton("NextLvlButton"))
+        {
+            ReloadLevel();
+        }*/
+
+        //
     }
 
     public int LevelNumber
@@ -119,6 +154,19 @@ public class SnakeMovement : MonoBehaviour
 
     private const string LevelNumberKey = "LevelNumber";
 
+    public int ScorePoints
+    {
+        get => PlayerPrefs.GetInt(ScorePointsKey, 0);
+
+        private set
+        {
+            PlayerPrefs.SetInt(ScorePointsKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    private const string ScorePointsKey = "ScorePoint";
+
     private void FixedUpdate()
     {
         if (Mathf.Abs(sidewaysSpeed) > 4)
@@ -130,7 +178,7 @@ public class SnakeMovement : MonoBehaviour
         sidewaysSpeed = 0;
     }
 
-    private void ReloadLevel()
+    public void ReloadLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
