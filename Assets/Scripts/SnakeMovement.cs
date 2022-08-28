@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,114 +13,108 @@ public class SnakeMovement : MonoBehaviour
 
     public GameObject WinScreen;
     public GameObject LoseScreen;
-
-    public Button NewLvl;
-    public Button ResLvl;
-
-    //public TextMesh TM;
-    //public GameObject LengthText;
+    public GameObject PlayScreen;
 
     public Text SnakeLenghtText;
     public Text ScoreText;
     public Text WinText;
 
-    private Camera mainCamera;
-    private Rigidbody componentRB;
-    private SnakeTail componentST;
+    public AudioClip CollectSound;
+    public AudioClip CollisionSound;
 
-    private Vector3 touchLastPos;
-    private float sidewaysSpeed;
+    private AudioSource _audio;
+        
+    private Camera _mainCamera;
+    private Rigidbody _componentRB;
+    private SnakeTail _componentST;
+    
+    private Vector3 _touchLastPos;
+    private float _sidewaysSpeed;
 
-    // Start is called before the first frame update
     void Start()
     {
-        mainCamera = Camera.main;
-        componentRB = GetComponent<Rigidbody>();
-        componentST = GetComponent<SnakeTail>();
-
-        NewLvl = GetComponent<Button>();
-        ResLvl = GetComponent<Button>();
+        _mainCamera = Camera.main;
+        _componentRB = GetComponent<Rigidbody>();
+        _componentST = GetComponent<SnakeTail>();
+        _audio = GetComponent<AudioSource>();
 
         Score = 0;
         ScoreText.text = ScorePoints.ToString();
 
         for (int i = 0; i < Length; i++)
         {
-            componentST.AddBodies();
+            _componentST.AddBodies();
         }
 
-        //TM = transform.GetChild(1).GetComponent<TextMesh>();
-        //TM.text = Length.ToString();
-        SnakeLenghtText.text = "Длина: " + Length.ToString();
+        SnakeLenghtText.text = "Души : " + Length.ToString();
 
         Debug.Log(LevelNumber);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            touchLastPos = mainCamera.ScreenToViewportPoint(Input.mousePosition);
+            _touchLastPos = _mainCamera.ScreenToViewportPoint(Input.mousePosition);
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            sidewaysSpeed = 0;
+            _sidewaysSpeed = 0;
         }
         else if (Input.GetMouseButton(0))
         {
-            Vector3 delta = (Vector3)mainCamera.ScreenToViewportPoint(Input.mousePosition) - touchLastPos;
-            sidewaysSpeed += delta.x * Sensitivity;
-            touchLastPos = mainCamera.ScreenToViewportPoint(Input.mousePosition);
+            Vector3 delta = (Vector3)_mainCamera.ScreenToViewportPoint(Input.mousePosition) - _touchLastPos;
+            _sidewaysSpeed += delta.x * Sensitivity;
+            _touchLastPos = _mainCamera.ScreenToViewportPoint(Input.mousePosition);
         }
     }
 
    public void AddTail ()
     {
         Length++;
-        componentST.AddBodies();
-        //TM.text = Length.ToString();
-        SnakeLenghtText.text = "Длина: " + Length.ToString();
+        _componentST.AddBodies();
+
+        _audio.PlayOneShot(CollectSound);
+        
+        SnakeLenghtText.text = "Души: " + Length.ToString();
     }
 
    public void RemoveTail ()
     {
         Length--;
 
+        _audio.PlayOneShot(CollisionSound);
+        
         ScorePoints++;
         ScoreText.text = ScorePoints.ToString();
 
         if (Length >= 0)
         {
-            componentST.RemoveBodies();
+            _componentST.RemoveBodies();
         }
 
         if (Length < 0)
         {
-            //TM.text = "0";
-            SnakeLenghtText.text = "Длина: 0";
+            SnakeLenghtText.text = "Души: 0";
             ScorePoints = 0;
         }
         else
         {
-            //TM.text = Length.ToString();
-            SnakeLenghtText.text = "Длина: " + Length.ToString();
+            SnakeLenghtText.text = "Души: " + Length.ToString();
         }
     }
 
     public void Die ()
     {
         ForwardSpeed = 0;
-        
+        PlayScreen.SetActive(false);
         LoseScreen.SetActive(true);
-
-        //ReloadLevel();
     }
 
     public void ReachFinish()
     {
         ForwardSpeed = 0;
-        
+        PlayScreen.SetActive(false);
         WinScreen.SetActive(true);
         WinText.text = "Уровень " + LevelNumber.ToString() + " пройден!";
 
@@ -132,13 +124,6 @@ public class SnakeMovement : MonoBehaviour
         {
             LevelNumber = 1;
         }
-
-        /*if (Input.GetButton("NextLvlButton"))
-        {
-            ReloadLevel();
-        }*/
-
-        //
     }
 
     public int LevelNumber
@@ -169,13 +154,13 @@ public class SnakeMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Mathf.Abs(sidewaysSpeed) > 4)
+        if (Mathf.Abs(_sidewaysSpeed) > 4)
         {
-            sidewaysSpeed = 4 * Mathf.Sign(sidewaysSpeed);
+            _sidewaysSpeed = 4 * Mathf.Sign(_sidewaysSpeed);
         }
 
-        componentRB.velocity = new Vector3(sidewaysSpeed * 5, 0, ForwardSpeed);
-        sidewaysSpeed = 0;
+        _componentRB.velocity = new Vector3(_sidewaysSpeed * 5, 0, ForwardSpeed);
+        _sidewaysSpeed = 0;
     }
 
     public void ReloadLevel()

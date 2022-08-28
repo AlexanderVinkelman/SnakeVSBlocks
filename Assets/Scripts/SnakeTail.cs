@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,15 +9,11 @@ public class SnakeTail : MonoBehaviour
     private List<Transform> snakeBodies = new List<Transform>();
     private List<Vector3> positions = new List<Vector3>();
 
-    
-    // Start is called before the first frame update
     void Start()
     {
         positions.Add(SnakeHead.position);
-
     }
 
-    // Update is called once per frame
     void Update()
     {
         float distance = ((Vector3) SnakeHead.position - positions[0]).magnitude;

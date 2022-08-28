@@ -111,6 +111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FoodPoints: 0
   TM: {fileID: 214348722299549089}
+  effect: {fileID: 5024340552678997227, guid: 80c597de3c2185c44b0f8e9cc8d4eb2e, type: 3}
 --- !u!1 &214348721188029291
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,7 +195,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: f6f30ae3d5cc77545bf15948afae2a19, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -234,7 +235,7 @@ TextMesh:
   m_FontSize: 50
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: f6f30ae3d5cc77545bf15948afae2a19, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -349,6 +350,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FoodPoints: 0
   TM: {fileID: 214348721256690117}
+  effect: {fileID: 5024340552678997227, guid: 80c597de3c2185c44b0f8e9cc8d4eb2e, type: 3}
 --- !u!1 &214348722299549094
 GameObject:
   m_ObjectHideFlags: 0
@@ -400,7 +402,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: f6f30ae3d5cc77545bf15948afae2a19, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -440,7 +442,7 @@ TextMesh:
   m_FontSize: 50
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: f6f30ae3d5cc77545bf15948afae2a19, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295

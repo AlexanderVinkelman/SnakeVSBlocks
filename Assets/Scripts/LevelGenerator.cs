@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Random = System.Random;
 
@@ -53,7 +51,6 @@ public class LevelGenerator : MonoBehaviour
             GameObject linePrefab = FoodPrefabs[foodIndex];
             GameObject line = Instantiate(linePrefab, transform);
             line.transform.position = CalculateFoodLinePosition(i);
-            // CalculatePositionX
         }
     }
 

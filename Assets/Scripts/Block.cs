@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Block : MonoBehaviour
@@ -12,12 +10,10 @@ public class Block : MonoBehaviour
 
     public TextMesh TM;
 
-    private SnakeMovement snake;
-    //private SnakeTail tail;
+    private SnakeMovement _snake;
 
     [SerializeField] private float maxPoints;
     
-    // Start is called before the first frame update
     void Start()
     {
         BlockPoints = (int)Random.Range(1f, maxPoints);
@@ -26,8 +22,7 @@ public class Block : MonoBehaviour
         TM = transform.GetChild(0).GetComponent<TextMesh>();
         TM.text = BlockPoints.ToString();
 
-        snake = GameObject.Find("Player").GetComponent<SnakeMovement>();
-        //tail = GameObject.Find("Player").GetComponent<SnakeTail>();
+        _snake = GameObject.Find("Player").GetComponent<SnakeMovement>();
 
         MR = GetComponent<MeshRenderer>();
         MR.material.SetFloat("Vector1_98ad2ead854b468885666a98fcbfb38c", BlockPoints/(maxPoints - 1));
@@ -37,15 +32,15 @@ public class Block : MonoBehaviour
     {
         for (int i = 0; i < BlockPoints; i++)
         {
-            snake.RemoveTail();
-
-            if (snake.Length >= 0)
+            _snake.RemoveTail();
+            
+            if (_snake.Length >= 0)
             {
                 GradientPoints--;
             }
             else
             {
-                snake.Die();
+                _snake.Die();
                 return;
             }
 
