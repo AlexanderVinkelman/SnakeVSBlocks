@@ -120,7 +120,7 @@ public class SnakeMovement : MonoBehaviour
 
         LevelNumber++;
 
-        if (LevelNumber > 3)
+        if (LevelNumber > 5)
         {
             LevelNumber = 1;
         }
